@@ -46,6 +46,13 @@ The raw dataset files are stored locally on my computer and are not included in 
 
 ## 3. Environment setup
 
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Vaishnaviram1026/ROGII-Wellbore-Geology-Prediction
+cd ROGII-Wellbore-Geology-Prediction
+```
+
 Requires **Python 3.10 or newer** (developed with Python 3.12). Run these from the project root.
 
 **Windows (PowerShell)**
