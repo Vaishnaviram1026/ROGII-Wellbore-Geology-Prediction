@@ -25,7 +25,7 @@ ROGII-Wellbore-Geology-Prediction/
 |-- src/
 |   `-- p1_eda_baseline.py        # data profile + two baselines 
 |-- data/
-|   `-- raw/                     
+|   `-- raw/            # (local only, excluded from GitHub)            
 |       |-- train/                # training wells (horizontal + typewell CSVs)
 |       |-- test/                 # test wells (no TVT target)
 |       `-- (competition zip and host task slides)
@@ -36,7 +36,12 @@ ROGII-Wellbore-Geology-Prediction/
 `-- results/                      # created by the script
     |-- p1_results.json
     `-- well_profile.csv
+
 ```
+
+### Data Availability
+
+The raw dataset files are stored locally on my computer and are not included in this GitHub repository because of their large size and the Kaggle competition's data-use requirements. The repository contains the code, figures, and results generated from the analysis. Please follow the download instructions above to obtain the dataset.
 ---
 
 ## 3. Environment setup
