@@ -1,0 +1,16 @@
+{
+  "n_files_found": 776,
+  "n_wells_scored": 773,
+  "total_rows": 5092255,
+  "total_pred_rows": 3783989,
+  "median_rows_per_well": 6576.0,
+  "median_frac_predicted": 0.7399910700997172,
+  "median_gr_missing_frac": 0.2770378263185935,
+  "max_gr_missing_frac": 0.800989010989011,
+  "pooled_rmse_hold_last_tvt": 15.909852870734554,
+  "pooled_rmse_linear_dip": 160.33207773827783,
+  "median_well_rmse_hold": 10.665140786694133,
+  "median_well_rmse_linear": 38.73132803665329,
+  "frac_wells_linear_beats_hold": 0.12548512289780078,
+  "lookback_ft": 500
+}
