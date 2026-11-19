@@ -2,3 +2,6 @@
 data/processed/
 .venv/
 __pycache__/
+# Large or regenerable row-level outputs
+results/oof_predictions.csv
+results/well_profile.csv

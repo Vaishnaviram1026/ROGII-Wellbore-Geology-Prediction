@@ -1,6 +1,19 @@
+# Data processing
 numpy
 pandas
+
+# Machine learning
+scikit-learn
+joblib
+
+# Visualization
 matplotlib
+pillow
+
+# PDF generation and processing
 reportlab
 pypdf
-pillow
+
+# Jupyter notebooks
+jupyter
+ipykernel

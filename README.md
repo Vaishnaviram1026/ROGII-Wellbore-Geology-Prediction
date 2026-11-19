@@ -1,76 +1,116 @@
 # ROGII Wellbore Geology Prediction: MSBA 265 Final Project (P1)
 
-## 1. Project summary
+## 1. Project Overview
 
-**Business problem.** A geosteering team drills a horizontal well through thin layers of rock and must keep the bit in the target layer. They estimate the bit's position in the rock column (called **TVT**, true vertical thickness) from gamma-ray (GR) readings and a nearby reference vertical well (the **typewell**).
+This project uses the **ROGII Wellbore Geology Prediction** dataset to predict **True Vertical Thickness (TVT)** along horizontal wellbores.
 
-**Question.** Using data available at the **Prediction Start (PS)** point, how accurately can a supervised model predict TVT for the rest of each lateral, compared with simple rules a geologist could apply by hand?
+### Problem and Objective
 
-**Topic / method.** Supervised machine learning (regression). Planned model: gradient-boosted trees predicting the change in TVT from the last known value.
+During horizontal drilling, geologists and geosteering specialists use well trajectories and gamma-ray (GR) measurements to understand the wellbore's position relative to geological layers.
 
-**Metric.** RMSE of TVT error in feet over all points after PS (the competition's metric).
+The objective is to improve TVT predictions beyond the **Prediction Start (PS)** point, where actual TVT values are hidden. More accurate predictions could support better-informed geosteering decisions and potentially reduce avoidable drilling time and costs.
 
-**Status at P1.** Data profile and two naive baselines are done. **No trained model yet** (that is P2).
+### Methodology
+
+The project uses **linear regression** with engineered features derived from well trajectory, gamma-ray measurements, and historical TVT information.
+
+Model performance is compared against two baseline methods:
+
+1. **Hold Last TVT:** Use the last known TVT value for all subsequent predictions.
+2. **Linear Dip Extrapolation:** Extend the recent TVT trend along measured depth.
+
+Evaluation uses **five-fold GroupKFold cross-validation by well**, with Root Mean Squared Error (RMSE) as the primary metric.
+
+### Project Outputs
+
+The repository includes exploratory data analysis, feature-engineering code, a model-training notebook, validation results, visualizations, a saved model, and a script for generating predictions on test wells.
+
+The model is intended to support geologists and geosteering specialists in decision-making, not to automate drilling decisions.
 
 **Data source.** Kaggle competition *ROGII - Wellbore Geology Prediction*: https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction
 
 ---
 
-## 2. Repository structure
+## 2. Repository Structure
 
-```
+```text
 ROGII-Wellbore-Geology-Prediction/
-|-- README.md
-|-- requirements.txt
-|-- src/
-|   `-- p1_eda_baseline.py        # data profile + two baselines 
-|-- data/
-|   `-- raw/            # (local only, excluded from GitHub)            
-|       |-- train/                # training wells (horizontal + typewell CSVs)
-|       |-- test/                 # test wells (no TVT target)
-|       `-- (competition zip and host task slides)
-|-- figures/                      # created by the script
-|   |-- fig_baseline_examples.png
-|   |-- fig_baseline_rmse_hist.png
-|   `-- fig_profile_hists.png
-`-- results/                      # created by the script
-    |-- p1_results.json
-    `-- well_profile.csv
-
+├── README.md
+├── requirements.txt
+├── src/
+│   ├── p1_eda_baseline.py
+│   ├── Rogii_Features.py
+│   ├── TVT_Model_Training.ipynb
+│   └── load_and_test.py
+├── data/
+│   └── raw/
+│       ├── train/            # Kaggle training files (local only)
+│       └── test/             # Kaggle test files (local only)
+├── artifacts/
+│   ├── rogii_tvt_core_model.joblib
+│   └── rogii_tvt_core_model_info.json
+├── results/                  # Evaluation and prediction CSVs
+└── figures/                  # Analysis plots
 ```
 
-### Data Availability
+## 3. Environment Setup
 
-The raw dataset files are stored locally on my computer and are not included in this GitHub repository because of their large size and the Kaggle competition's data-use requirements. The repository contains the code, figures, and results generated from the analysis. Please follow the download instructions above to obtain the dataset.
----
+**Requirements:** Python 3.10 or newer (developed using Python 3.12).
 
-## 3. Environment setup
+### Step 1: Clone the Repository
 
-### 1. Clone the Repository
+Open a terminal and run:
 
 ```bash
-git clone https://github.com/Vaishnaviram1026/ROGII-Wellbore-Geology-Prediction
+git clone https://github.com/Vaishnaviram1026/ROGII-Wellbore-Geology-Prediction.git
 cd ROGII-Wellbore-Geology-Prediction
 ```
 
-Requires **Python 3.10 or newer** (developed with Python 3.12). Run these from the project root.
+### Step 2: Create and Activate a Virtual Environment
 
 **Windows (PowerShell)**
+
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
 ```
-If PowerShell blocks activation, run `Set-ExecutionPolicy -Scope Process Bypass` first.
+
+If PowerShell blocks activation, run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+Then activate the environment again.
 
 **macOS / Linux**
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
 ```
 
----
+### Step 3: Install Dependencies
+
+With the virtual environment activated, run:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### Step 4: Create a Jupyter Kernel
+
+Register the virtual environment as a Jupyter kernel:
+
+```bash
+python -m ipykernel install --user --name rogii-wellbore --display-name "Python (ROGII Wellbore)"
+```
+
+When opening `src/TVT_Model_Training.ipynb` in VS Code, click **Select Kernel** in the upper-right corner and choose **Python (ROGII Wellbore)**.
+
+### Data Availability
+
+The raw dataset files are stored locally on my computer and are not included in this GitHub repository because of their large size and the Kaggle competition's data-use requirements. The repository contains the code, figures, and results generated from the analysis. Please follow the download instructions below to obtain the dataset.
 
 ## 4. Getting the data from Kaggle (required; data is not in this repo)
 
@@ -136,69 +176,131 @@ All units are feet. The files use anonymised IDs in their names.
 
 ---
 
-## 5. Run the analysis
+## 5. Run the Project
 
-From the project root, with the environment active:
+Run the following steps in order after completing the environment setup and downloading the Kaggle dataset.
+
+All terminal commands should be run from the **project root directory** with the virtual environment activated.
+
+### Step 1: Run Exploratory Data Analysis and Baselines
+
+Run:
 
 ```bash
 python src/p1_eda_baseline.py --data_dir data/raw/train
 ```
-(Windows: `python src\p1_eda_baseline.py --data_dir data\raw\train`)
 
-Use `data/raw/train` so only training wells (which have the TVT answer) are scored. The script searches subfolders for `*horizontal_well.csv`, skips any file without usable TVT after PS, and prints a summary.
+This script:
 
-**What it does**
-1. Profiles every horizontal well: rows, share after PS, GR missingness.
-2. Finds PS as the first row where `TVT_input` is blank.
-3. Scores two baselines on points after PS (no model is fitted, so scoring on training wells is not leakage):
-   - **A. Hold last TVT:** predict the last known TVT for every later point.
-   - **B. Linear dip extrapolation:** extend the TVT-vs-MD slope from the last 500 ft.
-4. Writes figures to `figures/` and numbers to `results/`.
+- Profiles the training wells and checks gamma ray (GR) missingness.
+- Identifies the Prediction Start (PS) point.
+- Evaluates two baseline methods: holding the last known TVT and linear dip extrapolation.
+- Saves baseline results and figures.
 
-**Runtime:** about a minute or two for ~770 wells on a normal laptop.
+**Expected outputs:**
 
----
+```text
+results/p1_results.json
+results/well_profile.csv
 
-## 6. Expected outputs
+figures/fig_baseline_examples.png
+figures/fig_baseline_rmse_hist.png
+figures/fig_profile_hists.png
+```
 
-Files created: `results/p1_results.json`, `results/well_profile.csv`, `figures/fig_baseline_examples.png`, `figures/fig_baseline_rmse_hist.png`, `figures/fig_profile_hists.png`.
+### Step 2: Feature Engineering
 
-My run produced the following in `results/p1_results.json` (a correct reproduction should match; small differences mean different input files):
+Feature engineering is implemented in:
 
-| Quantity | Expected value |
-|---|---|
-| Horizontal-well files found / scored | 776 / 773 (if you point at `data/raw` instead of `data/raw/train`) |
-| Total rows / rows to predict | 5,092,255 / 3,783,989 |
-| Median rows per well | 6,576 |
-| Median share of well to predict | 74.0% |
-| Median / max GR missing per well | 27.7% / 80.1% |
-| **Baseline A (hold) pooled / median per-well RMSE** | **15.91 ft / 10.67 ft** |
-| **Baseline B (linear) pooled / median per-well RMSE** | **160.33 ft / 38.73 ft** |
-| Share of wells where B beats A | 12.5% |
+```text
+src/Rogii_Features.py
+```
 
-> If your "found / scored" counts differ from 776 / 773, check which folder you passed to `--data_dir`.
-> I have not yet confirmed why 3 of 776 files were not scored; the likely cause is files without usable TVT after PS (for example test wells). Check `results/well_profile.csv` (one row per scored well) against the list of files in the folder.
+This module prepares the input features used by the regression model, including trajectory changes, gamma ray information, and the historical TVT trend.
 
----
+**No separate terminal command is required for this step.** The training notebook uses the feature-engineering code.
 
-## 7. Key P1 findings
+### Step 3: Train and Evaluate the Model
 
-- Holding the last known TVT is the stronger naive rule (15.9 ft pooled RMSE). Linear dip extrapolation is far worse and wins in only 12.5% of wells.
-- Errors are concentrated in a minority of wells (pooled RMSE exceeds the median).
-- Gamma ray is missing for a median of 27.7% of rows per well, so missing-data handling is a core preparation step.
-- Working target for P2: about 25% below 15.9 ft, or roughly 11.9 ft (my own target, to be revisited).
+Open the following notebook in VS Code:
 
----
+```text
+src/TVT_Model_Training.ipynb
+```
 
-## 9. Known limitations
+1. Select the **Python (ROGII Wellbore)** Jupyter kernel created during environment setup.
+2. Run the notebook cells from top to bottom.
+3. Wait for model training and validation to finish.
+4. Confirm that the model and evaluation outputs have been saved.
 
-- No predictive model yet; baselines only.
-- Baselines are scored on training wells; competition leaderboard scores use a hidden test set and are not comparable.
-- Findings come from one competition's wells and may not transfer to other basins.
-- The data are subject to the Kaggle competition rules; do not share them.
-- The task brief is the host's description; verify details against the competition Data tab.
+The notebook trains a linear regression model and evaluates it using five-fold cross-validation grouped by well.
 
-## 11. References
+**Expected outputs:**
+
+```text
+artifacts/rogii_tvt_core_model.joblib
+artifacts/rogii_tvt_core_model_info.json
+
+results/training_summary.json
+results/fold_validation_metrics.csv
+results/per_well_validation_metrics.csv
+results/distance_band_metrics.csv
+results/oof_predictions.csv
+
+figures/oof_actual_vs_predicted.png
+figures/rmse_by_distance.png
+```
+**Note on generated files:** The files `results/oof_predictions.csv` and `results/well_profile.csv` are excluded from GitHub to keep the repository lightweight. Both files are generated locally when running the analysis and training code. The smaller validation summary files, figures, and test predictions are included in the repository.
+
+
+### Step 4: Load the Saved Model and Generate Test Predictions
+
+After the training notebook has created the saved model, return to the project root directory and run:
+
+```bash
+python src/load_and_test.py --test_dir "data/raw/test"
+```
+
+This script loads the saved model and generates TVT predictions for the test wells.
+
+**Expected outputs:**
+
+```text
+results/test_predictions/
+    test_summary.csv
+    00bbac68__horizontal_well_predictions.csv
+    000d7d20__horizontal_well_predictions.csv
+    00e12e8b__horizontal_well_predictions.csv
+```
+
+The test wells do not contain the hidden TVT target values, so their prediction accuracy cannot be evaluated locally.
+
+### Step 5: Verify the Results
+
+Check that all expected files have been created.
+
+The training validation results should be approximately:
+
+| Method | RMSE (ft) | MAE (ft) |
+|---|---:|---:|
+| Hold last TVT baseline | 15.61 | 10.95 |
+| Linear dip extrapolation | 149.31 | 57.18 |
+| Linear regression model | 14.84 | 10.47 |
+
+The linear regression model improves RMSE by approximately **4.90%** compared with the hold-last-TVT baseline.
+
+These results are based on grouped cross-validation using training wells. The test wells have hidden TVT values, so test-set prediction accuracy cannot be calculated locally.
+
+## 6. Limitations
+
+- **Model performance:** The linear regression model improves RMSE by approximately 4.90% over the hold-last-TVT baseline, but the improvement is modest.
+- **Long-distance predictions:** Model accuracy decreases farther from Prediction Start, and the model performs worse than the hold baseline beyond 5,000 ft.
+- **Limited features:** The model uses trajectory, gamma ray, and historical TVT features. Typewell information and more advanced models are not included.
+- **Test evaluation:** Actual TVT values are hidden for the test wells, so test-set prediction accuracy cannot be measured locally.
+- **Business impact:** Potential drilling cost savings are hypothetical and have not been validated using operational data.
+
+
+## 7. References
 
 - Kaggle / ROGII. *ROGII - Wellbore Geology Prediction* (2026). https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction
-- Full reference list is in the P1 report.
+

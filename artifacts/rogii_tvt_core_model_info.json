@@ -1,0 +1,27 @@
+{
+  "model_type": "horizontal_only_core",
+  "features": [
+    "dMD",
+    "dZ",
+    "dX",
+    "dY",
+    "GR_dev",
+    "GR_missing",
+    "slope_x_dMD"
+  ],
+  "lookback_ft": 500.0,
+  "required_columns": [
+    "MD",
+    "X",
+    "Y",
+    "Z",
+    "GR",
+    "TVT_input"
+  ],
+  "target": "TVT - last_tvt",
+  "prediction_reconstruction": "TVT_pred = last_tvt + predicted_delta",
+  "max_rows_per_well": 2000,
+  "trained_wells": 773,
+  "training_rows": 1542405,
+  "random_seed": 42
+}

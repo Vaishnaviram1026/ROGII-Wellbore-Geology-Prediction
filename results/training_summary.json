@@ -1,0 +1,41 @@
+{
+  "n_wells": 773,
+  "n_rows": 1542405,
+  "n_features": 7,
+  "features": [
+    "dMD",
+    "dZ",
+    "dX",
+    "dY",
+    "GR_dev",
+    "GR_missing",
+    "slope_x_dMD"
+  ],
+  "cv_folds": 5,
+  "max_rows_per_well": 2000,
+  "pooled_metrics": [
+    {
+      "model": "Hold baseline",
+      "RMSE": 15.609935716677258,
+      "MAE": 10.946261377524078,
+      "R2": -0.008460471019755555,
+      "n_rows": 1542405
+    },
+    {
+      "model": "Linear extrapolation",
+      "RMSE": 149.31182103405465,
+      "MAE": 57.17670176433975,
+      "R2": -91.2667099836391,
+      "n_rows": 1542405
+    },
+    {
+      "model": "Linear regression",
+      "RMSE": 14.84451007924967,
+      "MAE": 10.465576341106994,
+      "R2": 0.08801354456222754,
+      "n_rows": 1542405
+    }
+  ],
+  "improvement_over_hold_pct": 4.903451566490611,
+  "sklearn_version": "1.9.1"
+}
