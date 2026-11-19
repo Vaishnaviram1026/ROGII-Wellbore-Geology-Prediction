@@ -252,7 +252,6 @@ figures/rmse_by_distance.png
 ```
 **Note on generated files:** The files `results/oof_predictions.csv` and `results/well_profile.csv` are excluded from GitHub to keep the repository lightweight. Both files are generated locally when running the analysis and training code. The smaller validation summary files, figures, and test predictions are included in the repository.
 
-
 ### Step 4: Load the Saved Model and Generate Test Predictions
 
 After the training notebook has created the saved model, return to the project root directory and run:
