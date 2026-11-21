@@ -34,9 +34,14 @@ The model is intended to support geologists and geosteering specialists in decis
 ## 2. Repository Structure
 
 ```text
+
 ROGII-Wellbore-Geology-Prediction/
 ├── README.md
 ├── requirements.txt
+├── .gitignore
+├── Report.html
+├── Report.pdf
+├── Stakeholder_Presentation.pptx
 ├── src/
 │   ├── p1_eda_baseline.py
 │   ├── Rogii_Features.py
@@ -51,6 +56,7 @@ ROGII-Wellbore-Geology-Prediction/
 │   └── rogii_tvt_core_model_info.json
 ├── results/                  # Evaluation and prediction CSVs
 └── figures/                  # Analysis plots
+
 ```
 
 ## 3. Environment Setup
